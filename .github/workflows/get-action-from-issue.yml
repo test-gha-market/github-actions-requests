@@ -6,22 +6,22 @@ on:
         description: The issue number to get the action from
         type: number
     outputs:
-      action: 
+      action:
         description: "action name"
         value: ${{ jobs.find-action-name.outputs.action }}
-      owner:  
+      owner:
         description: "owner name"
         value: ${{ jobs.find-action-name.outputs.owner }}
-      name:  
+      name:
         description: "owner/action name"
         value: ${{ jobs.find-action-name.outputs.name }}
-      request_owner:  
+      request_owner:
         description: "owner of the request repo"
         value: ${{ jobs.find-action-name.outputs.request_owner }}
-      request_repo:  
+      request_repo:
         description: "name of the request repo"
         value: ${{ jobs.find-action-name.outputs.request_repo }}
-      request_issue:  
+      request_issue:
         description: "issue with the request"
         value: ${{ jobs.find-action-name.outputs.request_issue }}
 
@@ -39,7 +39,7 @@ jobs:
       request_issue: ${{ steps.get-action.outputs.request_issue }}
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - id: dispatch_issue_find
       name: Find action from dispatch
       run: |
@@ -55,18 +55,18 @@ jobs:
             echo "::set-output name=issue_number::${issue_number}"
           fi
 
-    - uses: actions/github-script@v5
+    - uses: actions/github-script@v6
       name: Find action from issue
       id: get-action
       with:
         result-encoding: string
         script: |
           const script = require('./src/find-action-from-issue.js')
-                  
+
           const owner = context.repo.owner
           const repo = context.repo.repo
-          let issue_number = context.issue.number         
-          
+          let issue_number = context.issue.number
+
           if (issue_number == null) {
             // try to load issue number from other step:
             console.log(`issue number not found in context, searching for it in workflow dispatch step`)
