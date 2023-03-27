@@ -3,15 +3,15 @@ name: Notify on new issue
 on:
   issues:
     types: [opened]
-    
+
 jobs:
   tag-a-user:
     runs-on: ubuntu-latest
-    if: (github.repository == 'rajbos/github-actions-requests')
-    steps: 
+    if: (github.repository == 'test-gha-market/github-actions-requests')
+    steps:
       - uses: devops-actions/issue-comment-tag@v0.1.0
         name: Tag a user or team in an issue comment
-        with: 
+        with:
           issue: ${{ github.event.issue.number }}
           team: 'rajbos'
           owner: ${{ github.repository_owner }}
