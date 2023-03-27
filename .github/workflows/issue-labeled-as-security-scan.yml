@@ -1,7 +1,7 @@
 name: Issue labeled security scan
 
 on:
-  issues: 
+  issues:
     types: [labeled, unlabeled]
 
   workflow_dispatch:
@@ -10,10 +10,10 @@ on:
         description: 'Issue number to work with'
         required: true
         default: '11'
-    
-env: 
-  fork-owner: rajbos-actions-test # where to place the forks
-    
+
+env:
+  fork-owner: test-gha-market # where to place the forks
+
 jobs:
 
   find-action-name:
@@ -29,7 +29,7 @@ jobs:
       request_issue: ${{ steps.get-action.outputs.request_issue }}
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - id: dispatch_issue_find
       name: Find action from dispatch
       run: |
@@ -45,18 +45,18 @@ jobs:
            echo "::set-output name=issue_number::${issue_number}"
          fi
 
-    - uses: actions/github-script@v5
+    - uses: actions/github-script@v6
       name: Find action from issue
       id: get-action
       with:
         result-encoding: string
         script: |
           const script = require('./src/find-action-from-issue.js')
-                  
+
           const owner = context.repo.owner
           const repo = context.repo.repo
-          let issue_number = context.issue.number         
-          
+          let issue_number = context.issue.number
+
           if (issue_number == null) {
             // try to load issue number from other step:
             console.log(`issue number not found in context, searching for it in workflow dispatch step`)
@@ -92,7 +92,7 @@ jobs:
           });
 
           return result
-  
+
   get-languages-from-action:
     name: Load action code languages
     runs-on: ubuntu-latest
@@ -109,31 +109,31 @@ jobs:
       - run : gem install github-linguist
         name: Install linguist gem
 
-      - run: git clone https://github.com/rajbos/github-actions-requests.git
+      - run: git clone https://github.com/test-gha-market/github-actions-requests.git
         name: Clone actions repo
 
       - name: Get linguist analysis
         id: analysis
-        run: | 
+        run: |
          cd github-actions-requests
          linguist=$(github-linguist --json)
          echo "Linquist results:"
          echo $linguist
          echo "::set-output name=languages::$linguist"
 
-  # fork the repo so we can run dependabot security scan and a CodeQL scan on the fork        
-  fork-action-test:    
+  # fork the repo so we can run dependabot security scan and a CodeQL scan on the fork
+  fork-action-test:
     runs-on: ubuntu-latest
     name: Fork action to test organization
     needs: find-action-name
     steps:
-    - uses: actions/checkout@v2
-    - uses: actions/github-script@v5  
-      name: Check input variables have values     
-      with: 
+    - uses: actions/checkout@v3
+    - uses: actions/github-script@v6
+      name: Check input variables have values
+      with:
         github-token: ${{ secrets.GH_TOKEN }}
         script: |
-          
+
           // note: owner is now the organization the FORK lives in:
           const repo = `${{ needs.find-action-name.outputs.name }}`
           const owner = `${{ needs.find-action-name.outputs.owner }}`
@@ -159,8 +159,8 @@ jobs:
 
           return 0
 
-    - name: Fork the action repository to rajbos-actions-test
-      uses: rajbos-actions/forker@v0.0.1
+    - name: Fork the action repository to test-gha-market
+      uses: test-gha-market/forker@v0.0.6
       with:
         token: ${{ secrets.GH_TOKEN }}
         repo: ${{ needs.find-action-name.outputs.name }}
@@ -177,11 +177,11 @@ jobs:
       - fork-action-test
       - find-action-name
     steps:
-      - uses: actions/github-script@v5       
-        with: 
+      - uses: actions/github-script@v6
+        with:
           github-token: ${{ secrets.GH_TOKEN }}
           script: |
-            
+
             // note: owner is now the organization the FORK lives in:
             const owner = "${{ env.fork-owner }}"
             const repo = "${{ needs.find-action-name.outputs.name }}"
@@ -193,7 +193,7 @@ jobs:
             })
 
             console.log(`Enabled dependabot on the forked repo ${owner}/${repo}. We don't know when those checks are completed. Use another label to trigger the 'dependabot-alerts' workflow`)
-  
+
   # check if the original repo had:
   # 1) a dependabot configuration file
   # 2) a CodeQL workflow
@@ -203,7 +203,7 @@ jobs:
     needs: find-action-name
     steps:
     - name: Check-out actions-request repo
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
 
     - name: Check-out referenced Action
       run: |
@@ -211,20 +211,20 @@ jobs:
 
     - name: Check for .github and workflows folder and run docker scan
       id: scan
-      run: | 
+      run: |
         chmod +x src/security-scan.sh
         src/security-scan.sh
       env:
         ACTION: ${{ needs.find-action-name.outputs.action }}
 
     - name: Upload Trivy report
-      uses: actions/upload-artifact@v1
+      uses: actions/upload-artifact@v3
       if: steps.scan.outputs.action_uses_docker == 'true'
       with:
         path: issues
         name: trivy-issues.txt
         mime-type: application/text
-        
+
     - name: Update comment with results
       run: |
         chmod +x src/update-issue-comment.sh
@@ -244,7 +244,7 @@ jobs:
         HIGH_CRITICAL_ISSUES: ${{ steps.scan.outputs.high_critical_issues }}
 
     - name: Upload result file as artefact
-      uses: actions/upload-artifact@v1
+      uses: actions/upload-artifact@v3
       with:
         name: security-scan-result
         path: result.md
@@ -252,7 +252,7 @@ jobs:
   # add a CodeQL scan on the forked repo
   codeql:
     runs-on: ubuntu-latest
-    needs: 
+    needs:
       - fork-action-test
       - find-action-name
       - get-languages-from-action
@@ -261,16 +261,16 @@ jobs:
       codeql_run_id: ${{ steps.CodeQL-inject.outputs.codeql_run_id }}
     steps:
     # todo: what if the action.yml indicates it runs in a docker image? Then we have not neccesarily a way to run CodeQL on actual CODE
-    - uses: actions/checkout@v2
-    - uses: actions/github-script@v5
+    - uses: actions/checkout@v3
+    - uses: actions/github-script@v6
       name: Inject CodeQL workflow into new forked repository
       # todo: clear all other workflows first, to prevent them from running
-      id: CodeQL-inject      
-      with:      
-        github-token: ${{ secrets.GH_TOKEN }}  
+      id: CodeQL-inject
+      with:
+        github-token: ${{ secrets.GH_TOKEN }}
         script: |
            const script = require('./src/inject-codeql.js')
-           
+
            const owner = "${{ env.fork-owner }}"
            const repo = "${{ needs.find-action-name.outputs.name }}"
 
@@ -278,32 +278,32 @@ jobs:
            const languages = `${{ needs.get-languages-from-action.outputs.languages }}`
            const lang = JSON.parse(languages)
            const { ref, targetPath } = await script({github, owner, repo, languages: lang})
-    
+
            console.log(`Waiting for CodeQL workflow to complete`)
-           
+
            // actually wait for the workflow, by dispatching and loading the run id and wait for it to complete
            const startAndWaitScript = require('./src/start-and-wait-codeql.js')
-              
+
            console.log(`Using this repository: [${owner}/${repo}] with path [${targetPath}] and ref [${ref}]`)
            const { scanResult, run_id } = await startAndWaitScript({github, owner, repo, path: targetPath, ref})
            if (scanResult === 0) {
              console.log(`CodeQL workflow with run_id [${run_id}] completed successfully`)
-           } 
+           }
            else {
              // todo: output information so it can be read by the user (issue comment)
              console.log(`CodeQL workflow with run_id [${run_id}] failed with exit code ${scanResult}`)
-           }           
-           
+           }
+
            console.log(`::set-output name=codeql_run_id::'${run_id}'`)
 
-    - uses: actions/github-script@v5
+    - uses: actions/github-script@v6
       name: Get resuls from CodeQL scan
       id: get-codeql-results
       with:
         github-token: ${{ secrets.GH_TOKEN }}
         script: |
            const script = require('./src/get-codeql-results.js')
-                  
+
            // note: owner is now the organization the FORK lives in:
            const owner = "${{ env.fork-owner }}"
            const repo = "${{ needs.find-action-name.outputs.name }}"
@@ -314,32 +314,32 @@ jobs:
            console.log(`::set-output name=codeql::'${output}'`)
 
   display-results:
-    needs: 
+    needs:
       - codeql
       - find-action-name
       - check-action-security-setup
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2      
-      - uses: actions/download-artifact@v1
+      - uses: actions/checkout@v3
+      - uses: actions/download-artifact@v3
         with:
           name: security-scan-result
           #url: ${{ steps.check-action-security-setup.outputs.security_scan_result }}
           path: security-scan-result
-     
+
       - run: npm install fs
 
-      - uses: actions/github-script@v5
+      - uses: actions/github-script@v6
         name: Display results
         id: display-results
         env:
           debug: false
         with:
           github-token: ${{ secrets.GH_TOKEN }}
-          script: |            
+          script: |
             const fs = require('fs');
             const codeql = `${{ needs.codeql.outputs.codeql }}`
-            console.log(`CodeQL scan substring: [${codeql.substring(1, codeql.length - 1)}]`)  
+            console.log(`CodeQL scan substring: [${codeql.substring(1, codeql.length - 1)}]`)
 
             const codeqlResult = JSON.parse(codeql.substring(1, codeql.length - 1))
             if (${{ env.debug }}) {
