@@ -1,7 +1,7 @@
 name: Get Dependabot alerts
-  
+
 on:
-  issues: 
+  issues:
     types: [labeled, unlabeled]
 
   workflow_dispatch:
@@ -11,9 +11,9 @@ on:
         required: true
         default: '11'
 
-env: 
-  fork-owner: rajbos-actions-test # where the forks are place
-    
+env:
+  fork-owner: sergioko747 # where the forks are place
+
 jobs:
   find-action-name:
     if: github.event.label.name == 'load-dependabot-alerts'
@@ -27,7 +27,7 @@ jobs:
       request_issue: ${{ steps.get-action.outputs.request_issue }}
 
     steps:
-    - uses: actions/checkout@v2    
+    - uses: actions/checkout@v3
     - id: dispatch_issue_find
       name: Find action from issue
       run: |
@@ -43,19 +43,19 @@ jobs:
            echo "::set-output name=issue_number::${issue_number}"
          fi
 
-    - uses: actions/github-script@v5
+    - uses: actions/github-script@v6
       name: Find action from issue
       id: get-action
       with:
         result-encoding: string
         script: |
           const script = require('./src/find-action-from-issue.js')
-                  
+
           // note: owner is now the organization the FORK lives in:
           const owner = context.repo.owner
           const repo = context.repo.repo
-          let issue_number = context.issue.number         
-          
+          let issue_number = context.issue.number
+
           if (issue_number == null) {
             // try to load issue number from other step:
             console.log(`issue number not found in context, searching for it in workflow dispatch step`)
@@ -64,22 +64,22 @@ jobs:
           }
 
           await script({github, owner, repo, issue_number})
-          
 
-  # find the results from security vulnerabilities in Dependabot 
+
+  # find the results from security vulnerabilities in Dependabot
   dependabot-results:
     runs-on: ubuntu-latest
     needs: find-action-name
     steps:
-    - uses: actions/checkout@v2
-    - uses: actions/github-script@v5
+    - uses: actions/checkout@v3
+    - uses: actions/github-script@v6
       name: Get resuls from Dependabot scan
       id: get-codeql-results
-      with:      
+      with:
         github-token: ${{ secrets.GH_TOKEN }}
         # todo: wait for the actual scans to have been completed
         script: |
-           const script = require('./src/dependabot.js')                  
+           const script = require('./src/dependabot.js')
            // note: owner is now the organization the FORK lives in:
            let owner = "${{ env.fork-owner }}"
            let repo = "${{ needs.find-action-name.outputs.name }}"
@@ -91,7 +91,7 @@ jobs:
            })
 
            let results
-           if (enabledResult && enabledResult.status === 204) { 
+           if (enabledResult && enabledResult.status === 204) {
             console.log(`Dependabot security alerts has been enabled for the repo ${owner}/${repo}, loading the alerts`)
             results = await script({github, owner, repo})
 
@@ -101,10 +101,10 @@ jobs:
            }
            else {
               console.log(`Dependabot security alerts have not been enabled for the repo ${owner}/${repo}, skipping the scan`)
-              
+
               console.log(`::set-output name=dependabot_high::999`)
               console.log(`::set-output name=dependabot_moderate::999`)
-              
+
               results = {high: 999, moderate: 999}
            }
 
@@ -140,4 +140,3 @@ jobs:
               body: body.join('\n')
             });
 
-            
