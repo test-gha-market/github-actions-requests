@@ -274,12 +274,12 @@ jobs:
            const owner = "${{ env.fork-owner }}"
            const repo = "${{ needs.find-action-name.outputs.name }}"
 
-           console.log(`Using this repository: [${owner}/${repo}]`)
+           console.log(`GHA Using this repository: [${owner}/${repo}]`)
            const languages = `${{ needs.get-languages-from-action.outputs.languages }}`
            const lang = JSON.parse(languages)
            const { ref, targetPath } = await script({github, owner, repo, languages: lang})
 
-           console.log(`Waiting for CodeQL workflow to complete`)
+           console.log(`GHA Waiting for CodeQL workflow to complete`)
 
            // actually wait for the workflow, by dispatching and loading the run id and wait for it to complete
            const startAndWaitScript = require('./src/start-and-wait-codeql.js')
