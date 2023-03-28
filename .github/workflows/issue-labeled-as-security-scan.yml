@@ -45,7 +45,7 @@ jobs:
            echo "::set-output name=issue_number::${issue_number}"
          fi
 
-    - uses: actions/github-script@v6
+    - uses: actions/github-script@v5
       name: Find action from issue
       id: get-action
       with:
@@ -128,7 +128,7 @@ jobs:
     needs: find-action-name
     steps:
     - uses: actions/checkout@v3
-    - uses: actions/github-script@v6
+    - uses: actions/github-script@v5
       name: Check input variables have values
       with:
         github-token: ${{ secrets.GH_TOKEN }}
@@ -262,7 +262,7 @@ jobs:
     steps:
     # todo: what if the action.yml indicates it runs in a docker image? Then we have not neccesarily a way to run CodeQL on actual CODE
     - uses: actions/checkout@v3
-    - uses: actions/github-script@v6
+    - uses: actions/github-script@v5
       name: Inject CodeQL workflow into new forked repository
       # todo: clear all other workflows first, to prevent them from running
       id: CodeQL-inject
@@ -296,7 +296,7 @@ jobs:
 
            console.log(`::set-output name=codeql_run_id::'${run_id}'`)
 
-    - uses: actions/github-script@v6
+    - uses: actions/github-script@v5
       name: Get resuls from CodeQL scan
       id: get-codeql-results
       with:
@@ -329,7 +329,7 @@ jobs:
 
       - run: npm install fs
 
-      - uses: actions/github-script@v6
+      - uses: actions/github-script@v5
         name: Display results
         id: display-results
         env:
