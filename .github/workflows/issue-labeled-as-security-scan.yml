@@ -177,7 +177,7 @@ jobs:
       - fork-action-test
       - find-action-name
     steps:
-      - uses: actions/github-script@v6
+      - uses: actions/github-script@v5
         with:
           github-token: ${{ secrets.GH_TOKEN }}
           script: |
