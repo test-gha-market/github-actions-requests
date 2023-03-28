@@ -294,7 +294,7 @@ jobs:
              console.log(`GHA CodeQL workflow with run_id [${run_id}] failed with exit code ${scanResult}`)
            }
 
-           console.log(`GHA ::set-output name=codeql_run_id::'${run_id}'`)
+           console.log(`::set-output name=codeql_run_id::'${run_id}'`)
 
     - uses: actions/github-script@v5
       name: Get resuls from CodeQL scan
@@ -311,7 +311,7 @@ jobs:
            const result = await script({github, owner, repo})
            console.log(`GHA CodeQL scan completed with result: ${JSON.stringify(result)}`)
            const output = JSON.stringify(result)
-           console.log(`GHA ::set-output name=codeql::'${output}'`)
+           console.log(`::set-output name=codeql::'${output}'`)
 
   display-results:
     needs:

@@ -10,7 +10,7 @@ module.exports = async ({github, owner, repo, languages}) => {
         content = content.toString('utf8').replace(language, languageString)
         
         const targetPath = ".github/workflows/codeql-analysis.yml"                                    
-        console.log(`Uploading the CodeQL workflow to the forked repository`)
+        console.log(`JS Uploading the CodeQL workflow to the forked repository`)
         github.rest.repos.createOrUpdateFileContents({
             owner,
             repo,
@@ -27,14 +27,14 @@ module.exports = async ({github, owner, repo, languages}) => {
     }
 
     async function deleteExistingWorkflows(github, owner, repo) {   
-        console.log(`Deleting existing workflows in the fork`) 
+        console.log(`JS Deleting existing workflows in the fork`) 
         // load default branch from repo
         const {data: repository} = await github.rest.repos.get({
             owner,
             repo
         })
 
-        console.log(`Default_branch for repo [${repo}] is [${repository.default_branch}]`)
+        console.log(`JS Default_branch for repo [${repo}] is [${repository.default_branch}]`)
         
         // get ref for default branch
         const ref = repository.default_branch
@@ -81,7 +81,7 @@ module.exports = async ({github, owner, repo, languages}) => {
           )
           this.oid = oid || sha
         } catch (error) {
-          console.log(`Error deleting content from .github/workflows: [${error}]`)
+          console.log(`JS Error deleting content from .github/workflows: [${error}]`)
         }
         return ref
     }
@@ -98,7 +98,7 @@ module.exports = async ({github, owner, repo, languages}) => {
     function loadLanguagesToAnalyse(languages) {      
       // goal is to replace the line below with only the languages we get from Linguist:
       // language: [ 'cpp', 'csharp', 'go', 'java', 'javascript', 'python' ]
-      console.log(`Languages inputs: [${JSON.stringify(languages)}]`)
+      console.log(`JS Languages inputs: [${JSON.stringify(languages)}]`)
       let languagesToAnalyse = []
       if (languages.C) {
         languagesToAnalyse.push('cpp')
@@ -134,7 +134,7 @@ module.exports = async ({github, owner, repo, languages}) => {
       return languageString
     }
 
-    console.log(`Looking at this repository: [${owner}/${repo}]`)
+    console.log(`JS JS Looking at this repository: [${owner}/${repo}]`)
     const ref = await deleteExistingWorkflows(github, owner, repo)
 
     const languageString = loadLanguagesToAnalyse(languages)
