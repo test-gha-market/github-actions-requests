@@ -52,7 +52,7 @@ jobs:
           else
             echo "issue number found: [$issue_number]"
             # output a fixed variable
-            echo "::set-output name=issue_number::${issue_number}"
+            echo "name=${issue_number}" >> $GITHUB_OUTPUT
           fi
 
     - uses: actions/github-script@v6
