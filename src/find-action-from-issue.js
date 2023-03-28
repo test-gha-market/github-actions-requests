@@ -4,7 +4,7 @@ module.exports = async ({github, owner, repo, issue_number, core}) => {
   console.log(`Running with issue number [${issue_number}]`)
 
   // we always need these in the next steps:
-  console.log(`::set-output name=request_owner::${owner}`)            
+  console.log(`request_owner=${owner} >> $GITHUB_OUTPUT`)            
   console.log(`::set-output name=request_repo::${repo}`)
   console.log(`::set-output name=request_issue::${issue_number}`)
 
