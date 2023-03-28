@@ -47,6 +47,8 @@ module.exports = async ({github, owner, repo, issue_number, core}) => {
     }
   }
 
+  console.log(`------ Action is ${action} -----------`)
+
   let result
   if (action === null || action === undefined || action === '') {
     console.log('Action to use not found')
