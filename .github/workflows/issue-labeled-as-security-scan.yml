@@ -353,7 +353,8 @@ jobs:
             # const owner = '${{ needs.find-action-name.outputs.request_owner }}'
             # const repo = "${{ needs.find-action-name.outputs.request_repo }}"
             const owner = "${{ github.repository_owner }}"
-            const repo = "${{ github.repository }}"
+            # const repo = "${{ github.repository }}"
+            const repo = "github-actions-requests"
             # const issue = "${{ needs.find-action-name.outputs.request_issue }}"
             const issue = "${{ github.event.inputs.issue }}"
             const codeql_run_id = ${{ needs.codeql.outputs.codeql_run_id }}
