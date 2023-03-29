@@ -3,7 +3,7 @@ module.exports = async ({github, owner, repo, languages}) => {
     async function addCodeQLworkflow(github, owner, repo, languageString) {
         
         const { readFileSync } = require('fs')
-        const path = 'codeql-analysis.yml'
+        const path = '.github/workflows/codeql-analysis.yml'
         let content = readFileSync(`${process.env.GITHUB_WORKSPACE}/${path}`, 'utf8')
         // replace the default language string with the new one
         const language = "language: [ 'cpp', 'csharp', 'go', 'java', 'javascript', 'python' ]"
