@@ -136,9 +136,10 @@ module.exports = async ({github, owner, repo, languages}) => {
 
     console.log(`JS JS Looking at this repository: [${owner}/${repo}]`)
     const ref = await deleteExistingWorkflows(github, owner, repo)
-
+    console.log(`---- JS BEFORE loadLanguagesToAnalyse --------- `)
     const languageString = loadLanguagesToAnalyse(languages)
+    console.log(`---- JS BEFORE addCodeQLworkflow --------- `)
     const targetPath = await addCodeQLworkflow(github, owner, repo, languageString)
-
+    console.log(`---- JS AFTER addCodeQLworkflow --------- `)
     return { ref, targetPath }
 }
