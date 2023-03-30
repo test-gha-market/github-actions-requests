@@ -336,8 +336,6 @@ jobs:
           debug: false
         with:
           github-token: ${{ secrets.GH_TOKEN }}
-          run: |
-            - env
           script: |
             const fs = require('fs');
             const codeql = `${{ needs.codeql.outputs.codeql }}`
@@ -372,3 +370,5 @@ jobs:
             const securityFile = `/home/runner/work/github-actions-requests/github-actions-requests/security-scan-result/result.md` // todo: read work dir from env var
             await script({github, owner, repo, issue_number: issue, codeql_run_link, codeqlResult, securityScanResult: securityFile, fs})
             console.log(`--- FINISH ---`)
+       
+      - run: env
