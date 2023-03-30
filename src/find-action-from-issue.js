@@ -4,9 +4,9 @@ module.exports = async ({github, owner, repo, issue_number, core}) => {
   console.log(`Running with issue number [${issue_number}]`)
 
   // we always need these in the next steps:
-  console.log(`request_owner=${owner} >> $GITHUB_OUTPUT`)
-  console.log(`request_repo::${repo} >> $GITHUB_OUTPUT`)
-  console.log(`request_issue::${issue_number} >> $GITHUB_OUTPUT`)
+  console.log(`echo "request_owner=${owner}" >> $GITHUB_OUTPUT`)
+  console.log(`echo "request_repo=${repo}" >> $GITHUB_OUTPUT`)
+  console.log(`echo "request_issue=${issue_number}" >> $GITHUB_OUTPUT`)
 
   if (issue_number == null || issue_number == undefined || issue_number == '') {
     core.setFailed('Issue_number not found')
@@ -69,9 +69,10 @@ module.exports = async ({github, owner, repo, issue_number, core}) => {
     console.log(`Found owner:${actionOwner}`)
     console.log(`Found action:${actionName}`)
 
-    console.log(`::set-output name=action::${action}`)
-    console.log(`::set-output name=owner::${actionOwner}`)
-    console.log(`::set-output name=name::${actionName}`)
+    console.log(`echo "action=${action}" >> $GITHUB_OUTPUT`)
+    console.log(`echo "owner=${actionOwner}" >> $GITHUB_OUTPUT`)
+    console.log(`echo "name=${actionName}" >> $GITHUB_OUTPUT`)
+    // console.log(`echo "issue_number=${issue_number}" >> $GITHUB_OUTPUT`)
   }
 
   return { result, action }
