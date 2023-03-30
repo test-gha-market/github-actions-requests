@@ -329,15 +329,15 @@ jobs:
 
       - run: npm install fs
 
-      # - uses: actions/github-script@v6
-      #   name: Display results
-      #   id: display-results
-      #   env:
-      #     debug: false
-      #   with:
-      #     github-token: ${{ secrets.GH_TOKEN }}
-      #     script: |
-      #       const fs = require('fs');
+      - uses: actions/github-script@v6
+        name: Display results
+        id: display-results
+        env:
+          debug: false
+        with:
+          github-token: ${{ secrets.GH_TOKEN }}
+          script: |
+            const fs = require('fs');
       #       const codeql = `${{ needs.codeql.outputs.codeql }}`
       #       console.log(`GHA CodeQL scan substring: [${codeql.substring(1, codeql.length - 1)}]`)
 
