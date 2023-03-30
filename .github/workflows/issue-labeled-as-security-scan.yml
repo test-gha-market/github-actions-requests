@@ -342,7 +342,7 @@ jobs:
             console.log(`FULL: [${codeql}]`)
             console.log(`GHA CodeQL scan substring: [${codeql.substring(1, codeql.length - 1)}]`)
 
-            const codeqlResult = JSON.parse(codeql)
+            const codeqlResult = JSON.parse(codeql.substring(1, codeql.length - 1))
             if (${{ env.debug }}) {
               console.log(`GHA CodeQL scan results:`)
               console.log(`GHA - url: ${codeqlResult.url}`)
