@@ -4,12 +4,13 @@ module.exports = async ({github, owner, repo, issue_number, core}) => {
   console.log(`Running with issue number [${issue_number}]`)
 
   // we always need these in the next steps:
-  // console.log(`echo "{request_owner}={${owner}}" >> $GITHUB_OUTPUT`)
+  console.log(`echo "request_owner=${owner}" >> $GITHUB_OUTPUT`)
   // console.log(`echo "{request_repo}={${repo}}" >> $GITHUB_OUTPUT`)
   // console.log(`echo "{request_issue}={${issue_number}}" >> $GITHUB_OUTPUT`)
-  console.log(`::set-output name=request_owner::${owner}`)            
+  // console.log(`::set-output name=request_owner::${owner}`)
   console.log(`::set-output name=request_repo::${repo}`)
   console.log(`::set-output name=request_issue::${issue_number}`)
+  // console.log(`echo "{issue_number}={$issue_number}" >> $GITHUB_OUTPUT`)
 
   if (issue_number == null || issue_number == undefined || issue_number == '') {
     core.setFailed('Issue_number not found')
