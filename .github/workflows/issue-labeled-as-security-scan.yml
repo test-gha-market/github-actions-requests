@@ -119,7 +119,7 @@ jobs:
          linguist=$(github-linguist --json)
          echo "Linquist results:"
          echo $linguist
-         echo "{languages}={$linguist}" >> $GITHUB_OUTPUT
+         echo "{languages}=${linguist}" >> $GITHUB_OUTPUT
 
   # fork the repo so we can run dependabot security scan and a CodeQL scan on the fork
   fork-action-test:
