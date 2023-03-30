@@ -11,40 +11,40 @@ module.exports = async ({github, owner, repo, issue_number, codeql_run_link, cod
     console.log(`- created_at: [${codeqlResult.created_at}]`)
     console.log(`- securityScanResults: [${securityScanResult}]`)
     
-    let codeQLSymbol = ''
-    if (codeqlResult.results_count === 0) {
-        codeQLSymbol = ':white_check_mark:'
-    }
-    else {
-        codeQLSymbol = ':x:'
-    }
+    // let codeQLSymbol = ''
+    // if (codeqlResult.results_count === 0) {
+    //     codeQLSymbol = ':white_check_mark:'
+    // }
+    // else {
+    //     codeQLSymbol = ':x:'
+    // }
 
-    let commentBody = [
-        `:robot: Found these results:`,
-        ``,
-        `|Check|Results|Links|`,
-        `|---|---|---|`,
-        `|CodeQL on the forked repo|${codeQLSymbol}|[CodeQL run](${codeql_run_link})|`,
-        ``
-    ]   
+    // let commentBody = [
+    //     `:robot: Found these results:`,
+    //     ``,
+    //     `|Check|Results|Links|`,
+    //     `|---|---|---|`,
+    //     `|CodeQL on the forked repo|${codeQLSymbol}|[CodeQL run](${codeql_run_link})|`,
+    //     ``
+    // ]   
 
-    // load the securityScanResult file    
-    const scanResult = fs.readFileSync(securityScanResult);
-    console.log(`scanResult: [${scanResult}]`)
-    let securityBody = [
-        ``,
-        `Security scan: `,
-        `${scanResult}`
-    ]
+    // // load the securityScanResult file    
+    // const scanResult = fs.readFileSync(securityScanResult);
+    // console.log(`scanResult: [${scanResult}]`)
+    // let securityBody = [
+    //     ``,
+    //     `Security scan: `,
+    //     `${scanResult}`
+    // ]
 
-    commentBody.push.apply(commentBody, securityBody)
+    // commentBody.push.apply(commentBody, securityBody)
 
-    // create comment letting the user know the results
-    const result = await github.rest.issues.createComment({
-        owner,
-        repo,
-        issue_number,
-        body: commentBody.join('\n')
-    });
+    // // create comment letting the user know the results
+    // const result = await github.rest.issues.createComment({
+    //     owner,
+    //     repo,
+    //     issue_number,
+    //     body: commentBody.join('\n')
+    // });
     //console.log(`Issue created result: [${JSON.stringify(result)}]`)
 }  
