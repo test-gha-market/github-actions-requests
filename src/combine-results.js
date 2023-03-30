@@ -3,13 +3,13 @@ const { secureHeapUsed } = require("crypto")
 module.exports = async ({github, owner, repo, issue_number, codeql_run_link, codeqlResult, securityScanResult, fs}) => {
 
     console.log(``)
-    console.log(`Looking at this repository: [${owner}/${repo}] with issue number [${issue_number}]`)
-    console.log(`CodeQL scan results:`)
-    console.log(`- url: ${codeqlResult.url}`)
-    console.log(`- results.count: [${codeqlResult.results_count}]`)
-    console.log(`- environment: [${codeqlResult.environment}]`)
-    console.log(`- created_at: [${codeqlResult.created_at}]`)
-    console.log(`- securityScanResults: [${securityScanResult}]`)
+    // console.log(`Looking at this repository: [${owner}/${repo}] with issue number [${issue_number}]`)
+    // console.log(`CodeQL scan results:`)
+    // console.log(`- url: ${codeqlResult.url}`)
+    // console.log(`- results.count: [${codeqlResult.results_count}]`)
+    // console.log(`- environment: [${codeqlResult.environment}]`)
+    // console.log(`- created_at: [${codeqlResult.created_at}]`)
+    // console.log(`- securityScanResults: [${securityScanResult}]`)
     
     // let codeQLSymbol = ''
     // if (codeqlResult.results_count === 0) {
