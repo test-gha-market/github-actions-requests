@@ -73,13 +73,13 @@ module.exports = async ({github, owner, repo, issue_number, core}) => {
     console.log(`Found owner:${actionOwner}`)
     console.log(`Found action:${actionName}`)
 
-    // console.log(`echo "{action}={${action}}" >> $GITHUB_OUTPUT`)
-    // console.log(`echo "{owner}={${actionOwner}}" >> $GITHUB_OUTPUT`)
-    // console.log(`echo "{name}={${actionName}}" >> $GITHUB_OUTPUT`)
+    console.log(`echo "action=${action}" >> $GITHUB_OUTPUT`)
+    console.log(`echo "owner=${actionOwner}" >> $GITHUB_OUTPUT`)
+    console.log(`echo "name=${actionName}" >> $GITHUB_OUTPUT`)
     // console.log(`echo "issue_number=${issue_number}" >> $GITHUB_OUTPUT`)
-    console.log(`::set-output name=action::${action}`)
-    console.log(`::set-output name=owner::${actionOwner}`)
-    console.log(`::set-output name=name::${actionName}`)
+    // console.log(`::set-output name=action::${action}`)
+    // console.log(`::set-output name=owner::${actionOwner}`)
+    // console.log(`::set-output name=name::${actionName}`)
   }
 
   return { result, action }
