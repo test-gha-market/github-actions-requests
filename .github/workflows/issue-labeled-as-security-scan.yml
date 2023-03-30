@@ -356,8 +356,8 @@ jobs:
             const owner = "${{ github.repository_owner }}"
             const repo = "${{ github.event.repository.name }}"
             // const repo = "github-actions-requests"
-            // const issue = "${{ needs.find-action-name.outputs.request_issue }}"
-            const issue = "${{ github.event.inputs.issue }}"
+            const issue = "${{ needs.find-action-name.outputs.request_issue }}"
+            // const issue = "${{ github.event.inputs.issue }}"
             const codeql_run_id = ${{ needs.codeql.outputs.codeql_run_id }}
 
             // build up link to CodeQL workflow execution
@@ -369,3 +369,4 @@ jobs:
             const script = require('./src/combine-results.js')
             const securityFile = `/home/runner/work/github-actions-requests/github-actions-requests/security-scan-result/result.md` // todo: read work dir from env var
             await script({github, owner, repo, issue_number: issue, codeql_run_link, codeqlResult, securityScanResult: securityFile, fs})
+            console.log(`--- FINISH ---`)
