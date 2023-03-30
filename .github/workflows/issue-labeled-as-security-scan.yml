@@ -329,6 +329,7 @@ jobs:
 
       - run: npm install fs
 
+      - run: env
       - uses: actions/github-script@v6
         name: Display results
         id: display-results
@@ -370,5 +371,3 @@ jobs:
             const securityFile = `/home/runner/work/github-actions-requests/github-actions-requests/security-scan-result/result.md` // todo: read work dir from env var
             await script({github, owner, repo, issue_number: issue, codeql_run_link, codeqlResult, securityScanResult: securityFile, fs})
             console.log(`--- FINISH ---`)
-       
-      - run: env
