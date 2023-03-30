@@ -342,30 +342,4 @@ jobs:
             console.log(`FULL: [${codeql}]`)
             console.log(`GHA CodeQL scan substring: [${codeql.substring(1, codeql.length - 1)}]`)
 
-            # const codeqlResult = JSON.parse(codeql.substring(1, codeql.length - 1))
-            # if (${{ env.debug }}) {
-            #   console.log(`GHA CodeQL scan results:`)
-            #   console.log(`GHA - url: ${codeqlResult.url}`)
-            #   console.log(`GHA - results.count: [${codeqlResult.results_count}]`)
-            #   console.log(`GHA - environment: [${codeqlResult.environment}]`)
-            #   console.log(`GHA - created_at: [${codeqlResult.created_at}]`)
-            # }
 
-            # const owner = '${{ needs.find-action-name.outputs.request_owner }}'
-            # const repo = "${{ needs.find-action-name.outputs.request_repo }}"
-            # # const owner = "${{ github.repository_owner }}"
-            # # const repo = "${{ github.event.repository.name }}"
-            # # const repo = "github-actions-requests"
-            # # const issue = "${{ needs.find-action-name.outputs.request_issue }}"
-            # const issue = "${{ github.event.inputs.issue }}"
-            # const codeql_run_id = ${{ needs.codeql.outputs.codeql_run_id }}
-
-            # // build up link to CodeQL workflow execution
-            # const forkedRepoOwner = "${{ env.fork-owner }}"
-            # const forkedRepoName = "${{ needs.find-action-name.outputs.name }}"
-            # const codeql_run_link = `https://github.com/${forkedRepoOwner}/${forkedRepoName}/actions/runs/${codeql_run_id}`
-
-            # console.log(`GHA--- BEFORE RUNNING ./src/combine-results.js ---owner: ${owner} - - repo: ${repo} -  - issue_number: ${issue} - forkedRepoOwner: ${forkedRepoOwner}`)
-            # const script = require('./src/combine-results.js')
-            # const securityFile = `/home/runner/work/github-actions-requests/github-actions-requests/security-scan-result/result.md` // todo: read work dir from env var
-            # await script({github, owner, repo, issue_number: issue, codeql_run_link, codeqlResult, securityScanResult: securityFile, fs})
