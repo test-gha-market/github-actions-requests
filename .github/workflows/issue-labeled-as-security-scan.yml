@@ -313,7 +313,8 @@ jobs:
            const result = await script({github, owner, repo})
            console.log(`GHA CodeQL scan completed with result: ${JSON.stringify(result)}`)
            const output = JSON.stringify(result)
-           console.log(`echo "codeql=${output}" >> $GITHUB_OUTPUT`)
+           // #  console.log(`echo "codeql=${output}" >> $GITHUB_OUTPUT`)
+           console.log(`::set-output name=codeql::'${output}'`)
 
   display-results:
     needs:
@@ -354,13 +355,13 @@ jobs:
               console.log(`GHA - created_at: [${codeqlResult.created_at}]`)
             }
 
-            // const owner = '${{ needs.find-action-name.outputs.request_owner }}'
-            // const repo = "${{ needs.find-action-name.outputs.request_repo }}"
+            // # const owner = '${{ needs.find-action-name.outputs.request_owner }}'
+            // # const repo = "${{ needs.find-action-name.outputs.request_repo }}"
             const owner = "${{ github.repository_owner }}"
             const repo = "${{ github.event.repository.name }}"
-            // const repo = "github-actions-requests"
+            // # const repo = "github-actions-requests"
             const issue = "${{ needs.find-action-name.outputs.request_issue }}"
-            // const issue = "${{ github.event.inputs.issue }}"
+            // # const issue = "${{ github.event.inputs.issue }}"
             const codeql_run_id = ${{ needs.codeql.outputs.codeql_run_id }}
 
             // build up link to CodeQL workflow execution
