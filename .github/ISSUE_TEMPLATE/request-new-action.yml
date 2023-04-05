@@ -17,6 +17,7 @@ body:
       label: Action name
       description: The name of the action you want to request in the format owner/repository
       placeholder: "uses: devops-actions/issue-comment-tag"
+      value: "uses: "
     validations:
       required: true
   - type: textarea
