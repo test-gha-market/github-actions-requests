@@ -7,9 +7,9 @@ module.exports = async ({github, owner, repo, issue_number, core}) => {
   // console.log(`::set-output name=request_owner::${owner}`)
   // console.log(`::set-output name=request_repo::${repo}`)
   // console.log(`::set-output name=request_issue::${issue_number}`)
-  core.setOutput("request_owner", owner)
-  core.setOutput("request_repo", repo)
-  core.setOutput("request_issue", issue_number)
+  core.setOutput("request_owner", "${owner}")
+  core.setOutput("request_repo", "${repo}")
+  core.setOutput("request_issue", "${issue_number}")
 
   if (issue_number == null || issue_number == undefined || issue_number == '') {
     core.setFailed('Issue_number not found')
@@ -73,9 +73,12 @@ module.exports = async ({github, owner, repo, issue_number, core}) => {
     console.log(`Found owner:${actionOwner}`)
     console.log(`Found action:${actionName}`)
 
-    core.setOutput("action", action)
-    core.setOutput("owner", actionOwner)
-    core.setOutput("name", actionName)
+    // console.log(`::set-output name=action::${action}`)
+    // console.log(`::set-output name=owner::${actionOwner}`)
+    // console.log(`::set-output name=name::${actionName}`)
+    core.setOutput("action", "${action}")
+    core.setOutput("owner", "${actionOwner}")
+    core.setOutput("name", "${actionName}")
   }
 
   return { result, action }
