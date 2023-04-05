@@ -342,16 +342,16 @@ jobs:
           script: |
             const fs = require('fs');
             const codeql = `${{ needs.codeql.outputs.codeql }}`
-            console.log(`FULL: [${codeql}]`)
-            console.log(`GHA CodeQL scan substring: [${codeql.substring(1, codeql.length - 1)}]`)
+            console.log(`FULL: [${codeql}]`);
+            console.log(`GHA CodeQL scan substring: [${codeql.substring(1, codeql.length - 1)}]`);
 
-            const codeqlResult = JSON.parse(codeql.substring(1, codeql.length - 1))
+            const codeqlResult = JSON.parse(codeql.substring(1, codeql.length - 1));
             if (${{ env.debug }}) {
-              console.log(`GHA CodeQL scan results:`)
-              console.log(`GHA - url: ${codeqlResult.url}`)
-              console.log(`GHA - results.count: [${codeqlResult.results_count}]`)
-              console.log(`GHA - environment: [${codeqlResult.environment}]`)
-              console.log(`GHA - created_at: [${codeqlResult.created_at}]`)
+              console.log(`GHA CodeQL scan results:`);
+              console.log(`GHA - url: ${codeqlResult.url}`);
+              console.log(`GHA - results.count: [${codeqlResult.results_count}]`);
+              console.log(`GHA - environment: [${codeqlResult.environment}]`);
+              console.log(`GHA - created_at: [${codeqlResult.created_at}]`);
             }
 
             const owner = '${{ needs.find-action-name.outputs.request_owner }}'
