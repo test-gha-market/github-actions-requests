@@ -31,6 +31,7 @@ module.exports = async ({github, owner, repo, issue_number, core}) => {
 
   let action
   console.log(`After splitting the body we have [${split.length}] lines`)
+  console.log(`ACTION TO REVIEW: [${split[1]}] ---`)
   for (let i = 0; i < split.length; i++) {
     console.log(`Line [${i}] [${split[i]}]`)
     if (split[i].startsWith('uses: ')) {
