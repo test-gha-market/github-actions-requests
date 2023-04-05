@@ -14,7 +14,7 @@ body:
   - type: input
     id: action_name
     attributes:
-      label: Action name\n
+      label: Action name
       description: The name of the action you want to request in the format owner/repository
       placeholder: "uses: devops-actions/issue-comment-tag"
     validations:
