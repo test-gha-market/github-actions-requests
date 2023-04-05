@@ -40,7 +40,7 @@ jobs:
          else
            echo "issue number found: [$issue_number]"
            # output a fixed variable
-           echo "::set-output name=issue_number::${issue_number}"
+           echo "issue_number=${issue_number}" >> $GITHUB_OUTPUT
          fi
 
     - uses: actions/github-script@v6
@@ -96,14 +96,14 @@ jobs:
             results = await script({github, owner, repo})
 
             console.log(`result: ${JSON.stringify(results)}`)
-            console.log(`::set-output name=dependabot_high::${results.high}`)
-            console.log(`::set-output name=dependabot_moderate::${results.moderate}`)
+            console.log(`echo "dependabot_high=${results.high}" >> $GITHUB_OUTPUT`)
+            console.log(`echo "dependabot_moderate=${results.moderate}" >> $GITHUB_OUTPUT`)
            }
            else {
               console.log(`Dependabot security alerts have not been enabled for the repo ${owner}/${repo}, skipping the scan`)
 
-              console.log(`::set-output name=dependabot_high::999`)
-              console.log(`::set-output name=dependabot_moderate::999`)
+              console.log(`echo "dependabot_high=999" >> $GITHUB_OUTPUT`)
+              console.log(`echo "dependabot_moderate=999" >> $GITHUB_OUTPUT`)
 
               results = {high: 999, moderate: 999}
            }
