@@ -5,60 +5,60 @@ set -euo pipefail
 function github_folder_checks() {
     echo "Checking for files in the .github folder"
     if [ ! -d "action/.github" ] ; then
-        echo ::set-output name=has_github_folder::false
-        echo ::set-output name=has_workflows_folder::false
-        echo ::set-output name=has_dependabot_configuration::false
-        echo ::set-output name=has_codeql_init::false
-        echo ::set-output name=has_codeql_analyze::false        
+        echo "has_github_folder=false" >> $GITHUB_OUTPUT
+        echo "has_workflows_folder=false" >> $GITHUB_OUTPUT
+        echo "has_dependabot_configuration=false" >> $GITHUB_OUTPUT
+        echo "has_codeql_init=false" >> $GITHUB_OUTPUT
+        echo "has_codeql_analyze=false" >> $GITHUB_OUTPUT
 
         exit 0
     fi
 
-    echo ::set-output name=has_github_folder::true
+    echo "has_github_folder=true" >> $GITHUB_OUTPUT
 
-    if [[ -n $(find action/.github -maxdepth 1 -name dependabot.yml) ]] ; then 
-        echo ::set-output name=has_dependabot_configuration::true
-    else 
-        echo ::set-output name=has_dependabot_configuration::false
+    if [[ -n $(find action/.github -maxdepth 1 -name dependabot.yml) ]] ; then
+        echo "has_dependabot_configuration=true" >> $GITHUB_OUTPUT
+    else
+        echo "has_dependabot_configuration=false" >> $GITHUB_OUTPUT
     fi
 
     if [ ! -d "action/.github/workflows" ]; then
-        echo ::set-output name=has_workflows_folder::false
-        echo ::set-output name=has_codeql_init::false
-        echo ::set-output name=has_codeql_analyze::false
+        echo "has_workflows_folder=false" >> $GITHUB_OUTPUT
+        echo "has_codeql_init=false" >> $GITHUB_OUTPUT
+        echo "has_codeql_analyze=false" >> $GITHUB_OUTPUT
 
         exit 0
     fi
 
-    echo ::set-output name=has_workflows_folder::true
+    echo "has_workflows_folder=true" >> $GITHUB_OUTPUT
 
     # Look for CodeQL init workflow
     if [ `grep action/.github/workflows/*.yml -e 'uses: github/codeql-action/init' | wc -l` -gt 0 ]; then
         WORKFLOW_INIT=`grep action/.github/workflows/*.yml -e 'uses: github/codeql-action/init' -H | cut -f1 -d' ' | sed "s/:$//g"`
-        echo ::set-output name=workflow_with_codeql_init::${WORKFLOW_INIT}
-        echo ::set-output name=has_codeql_init::true
+        echo "workflow_with_codeql_init=${WORKFLOW_INIT}" >> $GITHUB_OUTPUT
+        echo "has_codeql_init=true" >> $GITHUB_OUTPUT
     else
-        echo ::set-output name=has_codeql_init::false
+        echo "has_codeql_init=false" >> $GITHUB_OUTPUT
     fi
 
     # Look for CodeQL analyze workflow
     if [ `grep action/.github/workflows/*.yml -e 'uses: github/codeql-action/analyze' | wc -l` -gt 0 ]; then
         WORKFLOW_ANALYZE=`grep action/.github/workflows/*.yml -e 'uses: github/codeql-action/analyze' -H | cut -f1 -d' ' | sed "s/:$//g"`
-        echo ::set-output name=workflow_with_codeql_analyze::${WORKFLOW_ANALYZE}
-        echo ::set-output name=has_codeql_analyze::true
+        echo "workflow_with_codeql_analyze=${WORKFLOW_ANALYZE}" >> $GITHUB_OUTPUT
+        echo "has_codeql_analyze=true" >> $GITHUB_OUTPUT
     else
-        echo ::set-output name=has_codeql_analyze::false
+        echo "has_codeql_analyze=false" >> $GITHUB_OUTPUT
     fi
 }
 
 function action_docker_checks() {
     echo "Checking for docker configuration"
     if [ "docker" != `yq e '.runs.using' action/action.yml` ] ; then
-        echo ::set-output name=action_uses_docker::false
+        echo "action_uses_docker=false" >> $GITHUB_OUTPUT
         exit 0
     fi
 
-    echo ::set-output name=action_uses_docker::true
+    echo "action_uses_docker=true" >> $GITHUB_OUTPUT
 
     echo "Installing trivy"
     sudo apt-get install wget apt-transport-https gnupg lsb-release
@@ -76,7 +76,7 @@ function action_docker_checks() {
         IMAGE=`yq e '.runs.image' action/action.yml`
         if  [[ $IMAGE = docker://* ]] ; then
             IMAGE=${IMAGE#docker://}
-        fi 
+        fi
         echo "Scan docker image with trivy [$IMAGE]"
         trivy --quiet image $IMAGE > issues
     fi
@@ -91,21 +91,21 @@ function action_docker_checks() {
     echo " - $LOW_MEDIUM_ISSUES low and medium issues found"
 
     if [ $LOW_MEDIUM_ISSUES -gt 0 ] ; then
-        echo ::set-output name=low_medium_issues::$LOW_MEDIUM_ISSUES
-        echo ::set-output name=has_low_medium_issues::true
+        echo "low_medium_issues=$LOW_MEDIUM_ISSUES" >> $GITHUB_OUTPUT
+        echo "has_low_medium_issues=true" >> $GITHUB_OUTPUT
     else
-        echo ::set-output name=has_low_medium_issues::false
-    fi 
+        echo "has_low_medium_issues=false" >> $GITHUB_OUTPUT
+    fi
 
     # Check if HIGH or CRITICAL issues are found (remove count from header)
     HIGH_CRITICAL_ISSUES=$(cat issues | grep -e HIGH -e CRITICAL | wc -l)
     echo " - $HIGH_CRITICAL_ISSUES high and crititcal issues found"
-    
+
     if [ $HIGH_CRITICAL_ISSUES -gt 0 ] ; then
-        echo ::set-output name=high_critical_issues::$HIGH_CRITICAL_ISSUES
-        echo ::set-output name=has_high_critical_issues::true
+        echo "high_critical_issues=$HIGH_CRITICAL_ISSUES" >> $GITHUB_OUTPUT
+        echo "has_high_critical_issues=true" >> $GITHUB_OUTPUT
     else
-        echo ::set-output name=has_high_critical_issues::false
+        echo "has_high_critical_issues=false" >> $GITHUB_OUTPUT
     fi
 }
 
