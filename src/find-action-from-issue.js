@@ -13,9 +13,6 @@ module.exports = async ({github, owner, repo, issue_number, core}) => {
   console.log(`Running with issue number [${issue_number}]`)
 
   // we always need these in the next steps:
-  // console.log(`::set-output name=request_owner::${owner}`)
-  // console.log(`::set-output name=request_repo::${repo}`)
-  // console.log(`::set-output name=request_issue::${issue_number}`)
   setOutput("request_owner", owner);
   setOutput("request_repo", repo);
   setOutput("request_issue", issue_number);
@@ -82,9 +79,6 @@ module.exports = async ({github, owner, repo, issue_number, core}) => {
     console.log(`Found owner:${actionOwner}`);
     console.log(`Found action:${actionName}`);
 
-    // console.log(`::set-output name=action::${action}`)
-    // console.log(`::set-output name=owner::${actionOwner}`)
-    // console.log(`::set-output name=name::${actionName}`)
     setOutput("action", action);
     setOutput("owner", actionOwner);
     setOutput("name", actionName);
