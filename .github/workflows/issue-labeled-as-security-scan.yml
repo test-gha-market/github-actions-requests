@@ -298,7 +298,6 @@ jobs:
 
            console.log(`::set-output name=codeql_run_id::'${run_id}'`)
            // console.log(`echo "codeql_run_id=${run_id}" >> $GITHUB_OUTPUT`)
-           console.log(codeql_run_id)
            console.log(run_id)
 
     - uses: actions/github-script@v6
