@@ -360,7 +360,8 @@ jobs:
             const owner = '${{ needs.find-action-name.outputs.request_owner }}'
             const repo = "${{ needs.find-action-name.outputs.request_repo }}"
             const issue = "${{ needs.find-action-name.outputs.request_issue }}"
-            const codeql_run_id = ${{ needs.codeql.outputs.codeql_run_id }}
+            console.log(`${{ needs.codeql.outputs.codeql_run_id }}`)
+            //const codeql_run_id = "${{ needs.codeql.outputs.codeql_run_id }}"
 
             // build up link to CodeQL workflow execution
             const forkedRepoOwner = "${{ env.fork-owner }}"
