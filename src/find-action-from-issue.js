@@ -34,7 +34,7 @@ module.exports = async ({github, owner, repo, issue_number, core}) => {
   console.log(`ACTION TO REVIEW: [${split[1]}] ---`)
   for (let i = 0; i < split.length; i++) {
     console.log(`Line [${i}] [${split[i]}]`)
-    if (split[i].startsWith('uses: ')) {
+    if (split[i] != "") {
       console.log(`Found uses statement!`)
 
       action = split[i].substring(6)
