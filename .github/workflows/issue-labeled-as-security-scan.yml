@@ -325,7 +325,7 @@ jobs:
            console.log(`GHA CodeQL scan completed with result: ${JSON.stringify(result)}`)
            const output = JSON.stringify(result)
            // console.log(`echo "codeql=${output}" >> $GITHUB_OUTPUT`)
-           core.setOutput('codeql', "${output}");
+           core.setOutput('codeql', output);
            // console.log(`::set-output name=codeql::'${output}'`)
 
   display-results:
@@ -359,7 +359,7 @@ jobs:
             console.log(`codeql_run_id: ${{ needs.codeql.outputs.codeql_run_id }}`)
             console.log(`GHA CodeQL scan substring: [${codeql.substring(1, codeql.length - 1)}]`);
 
-            const codeqlResult = JSON.parse(codeql.substring(1, codeql.length - 1));
+            const codeqlResult = JSON.parse(codeql);
             if (${{ env.debug }}) {
               console.log(`GHA CodeQL scan results:`);
               console.log(`GHA - url: ${codeqlResult.url}`);
