@@ -325,7 +325,8 @@ jobs:
            console.log(`GHA CodeQL scan completed with result: ${JSON.stringify(result)}`)
            const output = JSON.stringify(result)
            // console.log(`echo "codeql=${output}" >> $GITHUB_OUTPUT`)
-           console.log(`::set-output name=codeql::'${output}'`)
+           core.setOutput('codeql', output);
+           // console.log(`::set-output name=codeql::'${output}'`)
 
   display-results:
     needs:
