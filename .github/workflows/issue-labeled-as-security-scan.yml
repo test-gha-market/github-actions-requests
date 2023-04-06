@@ -304,9 +304,9 @@ jobs:
              console.log(`GHA CodeQL workflow with run_id [${run_id}] failed with exit code ${scanResult}`)
            }
 
-           console.log(`::set-output name=codeql_run_id::'${run_id}'`);
+           // console.log(`::set-output name=codeql_run_id::'${run_id}'`);
            // console.log(`echo "codeql_run_id=$run_id" >> $GITHUB_OUTPUT`);
-           // setOutput("codeql_run_id", run_id );
+           core.setOutput('codeql_run_id', run_id );
            console.log(`RUN_ID: ${run_id}`);
 
     - uses: actions/github-script@v6
