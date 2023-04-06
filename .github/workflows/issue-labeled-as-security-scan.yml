@@ -325,7 +325,7 @@ jobs:
            console.log(`GHA CodeQL scan completed with result: ${JSON.stringify(result)}`)
            const output = JSON.stringify(result)
            // console.log(`echo "codeql=${output}" >> $GITHUB_OUTPUT`)
-           core.setOutput('codeql', output);
+           core.setOutput('codeql', "${output}");
            // console.log(`::set-output name=codeql::'${output}'`)
 
   display-results:
@@ -344,7 +344,6 @@ jobs:
 
       - run: npm install fs
 
-      - run: env
       - uses: actions/github-script@v6
         name: Display results
         id: display-results
@@ -355,7 +354,9 @@ jobs:
           script: |
             const fs = require('fs');
             const codeql = `${{ needs.codeql.outputs.codeql }}`
-            console.log(`FULL: [${codeql}]`);
+            const codeql_run_id = "${{ needs.codeql.outputs.codeql_run_id }}"
+            console.log(`FULL: ${codeql}`);
+            console.log(`codeql_run_id: ${{ needs.codeql.outputs.codeql_run_id }}`)
             console.log(`GHA CodeQL scan substring: [${codeql.substring(1, codeql.length - 1)}]`);
 
             const codeqlResult = JSON.parse(codeql.substring(1, codeql.length - 1));
@@ -370,8 +371,8 @@ jobs:
             const owner = '${{ needs.find-action-name.outputs.request_owner }}'
             const repo = "${{ needs.find-action-name.outputs.request_repo }}"
             const issue = "${{ needs.find-action-name.outputs.request_issue }}"
-            console.log(`${{ needs.codeql.outputs.codeql_run_id }}`)
-            const codeql_run_id = "${{ needs.codeql.outputs.codeql_run_id }}"
+            // console.log(`${{ needs.codeql.outputs.codeql_run_id }}`)
+            // const codeql_run_id = "${{ needs.codeql.outputs.codeql_run_id }}"
 
             // build up link to CodeQL workflow execution
             const forkedRepoOwner = "${{ env.fork-owner }}"
