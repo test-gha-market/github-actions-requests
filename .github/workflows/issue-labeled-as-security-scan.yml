@@ -270,26 +270,18 @@ jobs:
       with:
         github-token: ${{ secrets.GH_TOKEN }}
         script: |
-           const os = require("os")
-           const fs = require("fs")
-
-           function setOutput(key, value) {
-             // Temporary hack until core actions library catches up with github new recommendations
-             const output = process.env['GITHUB_OUTPUT']
-             fs.appendFileSync(output, `${key}=${value}${os.EOL}`)
-           }
            const script = require('./src/inject-codeql.js')
 
            const owner = "${{ env.fork-owner }}"
            const repo = "${{ needs.find-action-name.outputs.name }}"
 
-           console.log(`GHA GHA Using this repository: [${owner}/${repo}]`)
+           console.log(`Using this repository: [${owner}/${repo}]`)
            const languages = `${{ needs.get-languages-from-action.outputs.languages }}`
            console.log(`langs: ${languages}`)
            const lang = JSON.parse(languages)
            const { ref, targetPath } = await script({github, owner, repo, languages: lang})
 
-           console.log(`GHA GHA Waiting for CodeQL workflow to complete`)
+           console.log(`Waiting for CodeQL workflow to complete`)
 
            // actually wait for the workflow, by dispatching and loading the run id and wait for it to complete
            const startAndWaitScript = require('./src/start-and-wait-codeql.js')
@@ -304,8 +296,6 @@ jobs:
              console.log(`GHA CodeQL workflow with run_id [${run_id}] failed with exit code ${scanResult}`)
            }
 
-           // console.log(`::set-output name=codeql_run_id::'${run_id}'`);
-           // console.log(`echo "codeql_run_id=$run_id" >> $GITHUB_OUTPUT`);
            core.setOutput('codeql_run_id', run_id );
            console.log(`RUN_ID: ${run_id}`);
 
@@ -324,9 +314,7 @@ jobs:
            const result = await script({github, owner, repo})
            console.log(`GHA CodeQL scan completed with result: ${JSON.stringify(result)}`)
            const output = JSON.stringify(result)
-           // console.log(`echo "codeql=${output}" >> $GITHUB_OUTPUT`)
            core.setOutput('codeql', output);
-           // console.log(`::set-output name=codeql::'${output}'`)
 
   display-results:
     needs:
@@ -355,8 +343,9 @@ jobs:
             const fs = require('fs');
             const codeql = `${{ needs.codeql.outputs.codeql }}`
             const codeql_run_id = "${{ needs.codeql.outputs.codeql_run_id }}"
+
             console.log(`FULL: ${codeql}`);
-            console.log(`codeql_run_id: ${{ needs.codeql.outputs.codeql_run_id }}`)
+            console.log(`codeql_run_id: ${codeql_run_id}`)
             console.log(`GHA CodeQL scan substring: [${codeql.substring(1, codeql.length - 1)}]`);
 
             const codeqlResult = JSON.parse(codeql);
@@ -371,8 +360,6 @@ jobs:
             const owner = '${{ needs.find-action-name.outputs.request_owner }}'
             const repo = "${{ needs.find-action-name.outputs.request_repo }}"
             const issue = "${{ needs.find-action-name.outputs.request_issue }}"
-            // console.log(`${{ needs.codeql.outputs.codeql_run_id }}`)
-            // const codeql_run_id = "${{ needs.codeql.outputs.codeql_run_id }}"
 
             // build up link to CodeQL workflow execution
             const forkedRepoOwner = "${{ env.fork-owner }}"
