@@ -259,17 +259,25 @@ jobs:
       - get-languages-from-action
     outputs:
       codeql: ${{ steps.get-codeql-results.outputs.codeql }}
-      codeql_run_id: ${{ steps.CodeQL-inject.outputs.codeql_run_id }}
+      codeql_run_id: ${{ steps.codeql-inject.outputs.codeql_run_id }}
     steps:
     # todo: what if the action.yml indicates it runs in a docker image? Then we have not neccesarily a way to run CodeQL on actual CODE
     - uses: actions/checkout@v3
     - uses: actions/github-script@v6
       name: Inject CodeQL workflow into new forked repository
       # todo: clear all other workflows first, to prevent them from running
-      id: CodeQL-inject
+      id: codeql-inject
       with:
         github-token: ${{ secrets.GH_TOKEN }}
         script: |
+           const os = require("os")
+           const fs = require("fs")
+
+           function setOutput(key, value) {
+             // Temporary hack until core actions library catches up with github new recommendations
+             const output = process.env['GITHUB_OUTPUT']
+             fs.appendFileSync(output, `${key}=${value}${os.EOL}`)
+           }
            const script = require('./src/inject-codeql.js')
 
            const owner = "${{ env.fork-owner }}"
@@ -298,7 +306,7 @@ jobs:
 
            // console.log(`::set-output name=codeql_run_id::'${run_id}'`);
            // console.log(`echo "codeql_run_id=$run_id" >> $GITHUB_OUTPUT`);
-           core.setOutput("codeql_run_id", run_id );
+           setOutput("codeql_run_id", run_id );
            console.log(`RUN_ID: ${run_id}`);
 
     - uses: actions/github-script@v6
