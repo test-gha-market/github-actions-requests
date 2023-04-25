@@ -75,7 +75,7 @@ function action_docker_checks() {
         else
         IMAGE=`yq e '.runs.image' $ACTION_FILE`
         if  [[ $IMAGE = docker://* ]] ; then
-            IMAGE=${IMAGE#docker://}
+            IMAGE=$(echo ${IMAGE#docker://} | tr '[:upper:]' '[:lower:]')
         fi
         echo "Scan docker image with trivy [$IMAGE]"
         trivy --quiet image $IMAGE > issues
@@ -109,8 +109,6 @@ function action_docker_checks() {
     fi
 }
 
-echo "Starting!!!"
-ls -a
 if [ -f "action/action.yml" ]; then
     export ACTION_FILE="action/action.yml"
 fi
