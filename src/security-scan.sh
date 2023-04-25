@@ -53,7 +53,7 @@ function github_folder_checks() {
 
 function action_docker_checks() {
     echo "Checking for docker configuration"
-    if [ "docker" != `yq e '.runs.using' action/action.yml` ] ; then
+    if [ "docker" != `yq e '.runs.using' $ACTION_FILE` ] ; then
         echo "action_uses_docker=false" >> $GITHUB_OUTPUT
         exit 0
     fi
@@ -67,13 +67,13 @@ function action_docker_checks() {
     sudo apt-get update
     sudo apt-get install trivy
 
-    if [ "Dockerfile" == `yq e '.runs.image' action/action.yml` ]; then
+    if [ "Dockerfile" == `yq e '.runs.image' $ACTION_FILE` ]; then
         echo "Scan docker image with trivy"
         docker build -t action-checkout/$ACTION action/
         trivy --quiet image action-checkout/$ACTION > issues
         docker image rm action-checkout/$ACTION
         else
-        IMAGE=`yq e '.runs.image' action/action.yml`
+        IMAGE=`yq e '.runs.image' $ACTION_FILE`
         if  [[ $IMAGE = docker://* ]] ; then
             IMAGE=${IMAGE#docker://}
         fi
@@ -111,7 +111,13 @@ function action_docker_checks() {
 
 echo "Starting!!!"
 ls -a
-# if [ -f "action/action.yml" ]; then
-#     echo 
+if [ -f "action/action.yml" ]; then
+    export ACTION_FILE="action/action.yml"
+fi
+
+if [ -f "action/action.yaml" ]; then
+    export ACTION_FILE="action/action.yaml"
+fi
+
 action_docker_checks
 github_folder_checks
