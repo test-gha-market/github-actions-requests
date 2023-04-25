@@ -78,6 +78,8 @@ function action_docker_checks() {
             IMAGE=${IMAGE#docker://}
         fi
         IMAGE=$(echo ${IMAGE} | tr '[:upper:]' '[:lower:]')
+        echo "IMAGE IS: $IMAGE --"
+        echo "IMAGE IS: $IMAGE --" | tr '[:upper:]' '[:lower:]'
         echo "Scan docker image with trivy [$IMAGE]"
         trivy --quiet image $IMAGE > issues
     fi
