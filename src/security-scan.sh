@@ -109,5 +109,8 @@ function action_docker_checks() {
     fi
 }
 
+ls -a
+# if [ -f "action/action.yml" ]; then
+#     echo 
 action_docker_checks
 github_folder_checks
