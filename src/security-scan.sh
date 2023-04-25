@@ -69,6 +69,7 @@ function action_docker_checks() {
 
     if [ "Dockerfile" == `yq e '.runs.image' $ACTION_FILE` ]; then
         echo "Scan docker image with trivy"
+        ACTION=$(echo $ACTION | tr '[:upper:]' '[:lower:]')
         docker build -t action-checkout/$ACTION action/
         trivy --quiet image action-checkout/$ACTION > issues
         docker image rm action-checkout/$ACTION
