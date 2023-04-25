@@ -109,6 +109,7 @@ function action_docker_checks() {
     fi
 }
 
+echo "Starting!!!"
 ls -a
 # if [ -f "action/action.yml" ]; then
 #     echo 
