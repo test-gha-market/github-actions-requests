@@ -13,7 +13,7 @@ jobs:
     uses: test-gha-market/github-actions-requests/.github/workflows/get-action-from-issue.yml@main
     with:
       # issue_number: ${{ github.event.inputs.issue }}
-      issue_number: ${{ github.event.inputs.issue }}
+      issue_number: ${{ github.event.issue.number }}
       # issue_number: 36
 
   fork-the-action:
