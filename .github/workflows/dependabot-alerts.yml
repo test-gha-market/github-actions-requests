@@ -12,7 +12,7 @@ on:
         default: '11'
 
 env:
-  fork-owner: test-gha-market # where the forks are place
+  fork-owner: test-gha-market-sandbox # where the forks are place
 
 jobs:
   find-action-name:
